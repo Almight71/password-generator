@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Цикл SDLC проекта Password Generator</title>
+  <desc id="desc">Семь этапов жизненного цикла: требования, анализ, дизайн, разработка, тестирование, развёртывание, поддержка — в замкнутом круге.</desc>
+
+  <defs>
+    <linearGradient id="hdr" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#667eea"/>
+      <stop offset="1" stop-color="#764ba2"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7c8db5"/>
+    </marker>
+    <style>
+      .lbl { fill:#ffffff; font-size:13px; font-weight:600; }
+      .cap { fill:#5c6690; font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+      .b   { fill:#5c6690; font-size:11.5px; }
+      .n   { fill:#1b2138; font-size:12.5px; font-weight:700; }
+      .doc { fill:#5c6690; font-size:11px; }
+      .ring{ stroke:#c9d0e8; stroke-width:2; fill:none; }
+    </style>
+  </defs>
+
+  <rect width="980" height="560" fill="#f2f4fb"/>
+  <rect width="980" height="56" fill="url(#hdr)"/>
+  <text x="28" y="35" class="lbl" font-size="18">Цикл SDLC — 7 этапов, замкнутая петля</text>
+  <text x="952" y="35" class="lbl" text-anchor="end" opacity=".85">src/sdlc_cycle.html</text>
+
+  <!-- Кольцо -->
+  <circle cx="490" cy="312" r="186" class="ring" stroke-dasharray="10 8"/>
+  <polygon points="490,120 476,142 504,142" fill="#7c8db5" transform="rotate(22 490 312)"/>
+
+  <!-- Центр -->
+  <circle cx="490" cy="312" r="78" fill="#ffffff" stroke="#c9d0e8" stroke-width="2"/>
+  <text x="490" y="302" class="n" text-anchor="middle" font-size="15">Password</text>
+  <text x="490" y="322" class="n" text-anchor="middle" font-size="15">Generator</text>
+  <text x="490" y="344" class="doc" text-anchor="middle">v1.0.0 · 25/25 тестов</text>
+
+  <!-- Узлы (7 штук по кругу) -->
+  <circle cx="295" cy="248" r="44" fill="#7c5cff"/>
+  <text x="295" y="244" class="lbl" text-anchor="middle" font-size="12">1</text>
+  <text x="295" y="262" class="lbl" text-anchor="middle" font-size="11">Требования</text>
+  <text x="150" y="352" class="doc" text-anchor="middle">01_REQUIREMENTS.md</text>
+
+  <circle cx="394" cy="168" r="44" fill="#5b8def"/>
+  <text x="394" y="164" class="lbl" text-anchor="middle" font-size="12">2</text>
+  <text x="394" y="182" class="lbl" text-anchor="middle" font-size="11">Анализ</text>
+  <text x="394" y="112" class="doc" text-anchor="middle">02_ANALYSIS.md</text>
+
+  <circle cx="585" cy="168" r="44" fill="#2fb8a6"/>
+  <text x="585" y="164" class="lbl" text-anchor="middle" font-size="12">3</text>
+  <text x="585" y="182" class="lbl" text-anchor="middle" font-size="11">Дизайн</text>
+  <text x="585" y="112" class="doc" text-anchor="middle">03_DESIGN.md</text>
+
+  <circle cx="685" cy="248" r="44" fill="#3ecf8e"/>
+  <text x="685" y="244" class="lbl" text-anchor="middle" font-size="12">4</text>
+  <text x="685" y="262" class="lbl" text-anchor="middle" font-size="11">Разработка</text>
+  <text x="830" y="352" class="doc" text-anchor="middle">04_DEVELOPMENT.md</text>
+
+  <circle cx="675" cy="456" r="44" fill="#f2a93b"/>
+  <text x="675" y="452" class="lbl" text-anchor="middle" font-size="12">5</text>
+  <text x="675" y="470" class="lbl" text-anchor="middle" font-size="11">Тестирование</text>
+  <text x="700" y="520" class="doc" text-anchor="middle">05_TESTING.md</text>
+
+  <circle cx="305" cy="456" r="44" fill="#e2673b"/>
+  <text x="305" y="452" class="lbl" text-anchor="middle" font-size="12">6</text>
+  <text x="305" y="470" class="lbl" text-anchor="middle" font-size="11">Развёртывание</text>
+  <text x="280" y="520" class="doc" text-anchor="middle">06_DEPLOYMENT.md</text>
+
+  <circle cx="490" cy="494" r="44" fill="#9b6cd6"/>
+  <text x="490" y="490" class="lbl" text-anchor="middle" font-size="12">7</text>
+  <text x="490" y="508" class="lbl" text-anchor="middle" font-size="11">Поддержка</text>
+  <text x="490" y="548" class="doc" text-anchor="middle">07_MAINTENANCE.md</text>
+
+  <!-- Стрелки между узлами -->
+  <path d="M325,232 Q440,120 555,152" class="ring" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M625,152 Q700,190 715,232" class="ring" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M700,290 Q690,390 640,440" class="ring" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M610,480 Q560,510 530,505" class="ring" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M450,505 Q370,510 335,480" class="ring" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M280,440 Q270,390 268,300" class="ring" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+
+  <!-- Легенда -->
+  <text x="28" y="92" class="cap">Принцип</text>
+  <rect x="28" y="104" width="220" height="0" fill="none"/>
+  <text x="28" y="392" class="b" opacity="0">.</text>
+
+  <!-- Боковая панель -->
+  <rect x="28" y="104" width="200" height="132" rx="10" fill="#ffffff" stroke="#c9d0e8"/>
+  <text x="44" y="128" class="n">Замкнутый цикл</text>
+  <text x="44" y="150" class="doc">Обратная связь из этапа 7</text>
+  <text x="44" y="168" class="doc">порождает новые требования</text>
+  <text x="44" y="186" class="doc">и снова проходит все семь</text>
+  <text x="44" y="204" class="doc">шагов — непрерывное</text>
+  <text x="44" y="222" class="doc">улучшение продукта.</text>
+
+  <text x="952" y="92" class="cap" text-anchor="end">Артефакты</text>
+  <text x="952" y="392" class="doc" text-anchor="end">7 документов docs/SDLC/*.md</text>
+</svg>

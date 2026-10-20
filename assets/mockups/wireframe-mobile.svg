@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 640" width="980" height="640" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">Макет мобильной раскладки (320px)</title>
+  <desc id="desc">Скелетон интерфейса в одну колонку: генератор сверху, настройки, затем сохранённые пароли карточками.</desc>
+
+  <defs>
+    <linearGradient id="hdr" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#667eea"/>
+      <stop offset="1" stop-color="#764ba2"/>
+    </linearGradient>
+    <style>
+      .lbl { fill:#ffffff; font-size:13px; font-weight:600; }
+      .cap { fill:#5c6690; font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+      .box { fill:#fbfcff; stroke:#c9d0e8; stroke-width:1.5; }
+      .ttl { fill:#1b2138; font-size:13px; font-weight:700; }
+      .b   { fill:#5c6690; font-size:11.5px; }
+      .ui  { fill:#ffffff; stroke:#b6c0ff; stroke-width:1.5; }
+      .btn { fill:#7c5cff; }
+      .btnt{ fill:#ffffff; font-size:11.5px; font-weight:700; }
+      .muted{ fill:#eef1fb; }
+      .line{ stroke:#d9def0; stroke-width:1; }
+    </style>
+  </defs>
+
+  <rect width="980" height="640" fill="#f2f4fb"/>
+  <rect width="980" height="44" fill="url(#hdr)"/>
+  <text x="28" y="28" class="lbl" font-size="15">Макет · мобильная раскладка 320px</text>
+  <text x="952" y="28" class="lbl" text-anchor="end" opacity=".85">wireframe-mobile.svg</text>
+
+  <!-- Устройство -->
+  <rect x="330" y="68" width="320" height="560" rx="26" fill="#ffffff" stroke="#c9d0e8" stroke-width="2"/>
+  <rect x="330" y="68" width="320" height="44" rx="26" fill="#eef1ff"/>
+  <rect x="330" y="88" width="320" height="24" fill="#eef1ff"/>
+  <text x="346" y="96" class="ttl" font-size="12">🔐 Генератор</text>
+
+  <!-- Поле пароля -->
+  <rect class="ui" x="346" y="128" width="288" height="42" rx="8"/>
+  <text x="358" y="154" class="b">Vg7$kQ2!mZx9#pLr</text>
+
+  <rect class="muted" x="346" y="180" width="288" height="8" rx="4"/>
+  <rect class="btn" x="346" y="180" width="233" height="8" rx="4"/>
+  <text x="346" y="204" class="b">Очень сильный · ≈ 103.4 бит</text>
+
+  <!-- Кнопки на всю ширину -->
+  <rect class="btn" x="346" y="216" width="288" height="38" rx="8"/>
+  <text x="490" y="240" class="btnt" text-anchor="middle">Сгенерировать</text>
+
+  <rect class="ui" x="346" y="264" width="288" height="38" rx="8"/>
+  <text x="490" y="288" class="b" text-anchor="middle">Копировать</text>
+
+  <line x1="346" y1="320" x2="634" y2="320" class="line"/>
+
+  <!-- Настройки в одну колонку -->
+  <text x="346" y="344" class="ttl">Длина: <tspan fill="#7c5cff">16</tspan></text>
+  <rect class="muted" x="346" y="354" width="288" height="6" rx="3"/>
+  <circle cx="510" cy="357" r="9" fill="#7c5cff"/>
+
+  <text x="346" y="386" class="b">☑ Заглавные буквы</text>
+  <text x="346" y="408" class="b">☑ Строчные буквы</text>
+  <text x="346" y="430" class="b">☑ Цифры</text>
+  <text x="346" y="452" class="b">☑ Спецсимволы</text>
+
+  <line x1="346" y1="470" x2="634" y2="470" class="line"/>
+
+  <!-- Сохранение -->
+  <rect class="ui" x="346" y="482" width="288" height="36" rx="8"/>
+  <text x="358" y="505" class="b">Название (например, Почта)</text>
+
+  <rect class="btn" x="346" y="528" width="288" height="36" rx="8"/>
+  <text x="490" y="551" class="btnt" text-anchor="middle">Сохранить</text>
+
+  <!-- Карточка записи -->
+  <rect class="box" x="346" y="576" width="288" height="40" rx="8"/>
+  <text x="358" y="594" class="ttl" font-size="12">Почта</text>
+  <text x="358" y="610" class="b">•••••••••••• · Сильный · 20.10</text>
+  <text x="624" y="604" class="b" text-anchor="end">👁 📋 🗑</text>
+
+  <!-- Выноски -->
+  <line x1="650" y1="150" x2="700" y2="150" stroke="#7c5cff" stroke-width="1.5"/>
+  <circle cx="704" cy="150" r="4" fill="#7c5cff"/>
+  <text x="716" y="146" class="b">Пароль крупным моноширинным</text>
+  <text x="716" y="162" class="b">шрифтом, без переноса</text>
+
+  <line x1="650" y1="235" x2="700" y2="235" stroke="#7c5cff" stroke-width="1.5"/>
+  <circle cx="704" cy="235" r="4" fill="#7c5cff"/>
+  <text x="716" y="231" class="b">Кнопки во всю ширину —</text>
+  <text x="716" y="247" class="b">минимум 38px по высоте</text>
+
+  <line x1="650" y1="418" x2="700" y2="418" stroke="#7c5cff" stroke-width="1.5"/>
+  <circle cx="704" cy="418" r="4" fill="#7c5cff"/>
+  <text x="716" y="414" class="b">Чекбоксы в столбец,</text>
+  <text x="716" y="430" class="b">зона нажатия ≥ 44px</text>
+
+  <line x1="650" y1="596" x2="700" y2="596" stroke="#7c5cff" stroke-width="1.5"/>
+  <circle cx="704" cy="596" r="4" fill="#7c5cff"/>
+  <text x="716" y="592" class="b">Таблица превращается</text>
+  <text x="716" y="608" class="b">в карточки-строки</text>
+
+  <text x="490" y="632" class="b" text-anchor="middle">Один flex-поток · padding 16px · горизонтальная прокрутка отсутствует (проверяется TC23)</text>
+</svg>

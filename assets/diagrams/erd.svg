@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" width="980" height="560" font-family="'Segoe UI', system-ui, sans-serif" role="img" aria-labelledby="title desc">
+  <title id="title">ER-диаграмма: PasswordRecord</title>
+  <desc id="desc">Единственная сущность PasswordRecord схемы v1, её поля и связь с миграцией из схемы v0.</desc>
+
+  <defs>
+    <linearGradient id="hdr" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#667eea"/>
+      <stop offset="1" stop-color="#764ba2"/>
+    </linearGradient>
+    <style>
+      .lbl { fill:#ffffff; font-size:13px; font-weight:600; }
+      .cap { fill:#5c6690; font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+      .fld { fill:#1b2138; font-size:12.5px; }
+      .meta{ fill:#5c6690; font-size:11.5px; }
+      .pk  { fill:#7c5cff; font-size:12.5px; font-weight:700; }
+      .note{ fill:#5c6690; font-size:12px; }
+    </style>
+  </defs>
+
+  <rect width="980" height="560" fill="#f2f4fb"/>
+  <rect width="980" height="56" fill="url(#hdr)"/>
+  <text x="28" y="35" class="lbl" font-size="18">Модель данных</text>
+  <text x="952" y="35" class="lbl" text-anchor="end" opacity=".85">schema v1</text>
+
+  <!-- Текущая сущность -->
+  <text x="28" y="92" class="cap">Сущность · текущая схема</text>
+  <rect x="28" y="104" width="440" height="248" rx="12" fill="#ffffff" stroke="#c9d0e8" stroke-width="2"/>
+  <rect x="28" y="104" width="440" height="42" rx="12" fill="#7c5cff"/>
+  <rect x="28" y="134" width="440" height="12" fill="#7c5cff"/>
+  <text x="48" y="132" class="lbl" font-size="15">PasswordRecord</text>
+  <text x="448" y="132" class="lbl" text-anchor="end" opacity=".85">localStorage["passwords_v1"]</text>
+
+  <text x="48" y="172" class="pk">id</text>
+  <text x="200" y="172" class="meta">number · PK · createId()</text>
+  <line x1="48" y1="182" x2="448" y2="182" stroke="#eef1fb"/>
+
+  <text x="48" y="204" class="fld">name</text>
+  <text x="200" y="204" class="meta">string · 2–100 · sanitizeInput()</text>
+  <line x1="48" y1="214" x2="448" y2="214" stroke="#eef1fb"/>
+
+  <text x="48" y="236" class="fld">password</text>
+  <text x="200" y="236" class="meta">string · непустая · открытый текст</text>
+  <line x1="48" y1="246" x2="448" y2="246" stroke="#eef1fb"/>
+
+  <text x="48" y="268" class="fld">createdAt</text>
+  <text x="200" y="268" class="meta">string · ISO 8601</text>
+  <line x1="48" y1="278" x2="448" y2="278" stroke="#eef1fb"/>
+
+  <text x="48" y="300" class="fld">strengthScore</text>
+  <text x="200" y="300" class="meta">number · 0–4 · индекс STRENGTH_LEVELS</text>
+  <line x1="48" y1="310" x2="448" y2="310" stroke="#eef1fb"/>
+
+  <text x="48" y="336" class="meta">Хранилище: массив JSON — корневой тип Array&lt;PasswordRecord&gt;</text>
+
+  <!-- Легаси-схема -->
+  <text x="512" y="92" class="cap">Сущность · схема v0 (легаси)</text>
+  <rect x="512" y="104" width="440" height="200" rx="12" fill="#fbfcff" stroke="#c9d0e8" stroke-width="1.5" stroke-dasharray="7 4"/>
+  <rect x="512" y="104" width="440" height="42" rx="12" fill="#9aa3c7"/>
+  <rect x="512" y="134" width="440" height="12" fill="#9aa3c7"/>
+  <text x="532" y="132" class="lbl" font-size="15">LegacyRecord</text>
+  <text x="932" y="132" class="lbl" text-anchor="end" opacity=".9">localStorage["passwords"]</text>
+
+  <text x="532" y="172" class="fld">id · name · password</text>
+  <text x="532" y="192" class="meta">те же поля, без санитизации имени</text>
+  <line x1="532" y1="202" x2="932" y2="202" stroke="#eef1fb"/>
+
+  <text x="532" y="224" class="fld">createdAt</text>
+  <text x="684" y="224" class="meta">string · локальный формат «20.10.2026»</text>
+  <line x1="532" y1="234" x2="932" y2="234" stroke="#eef1fb"/>
+
+  <text x="532" y="256" class="fld">strength</text>
+  <text x="684" y="256" class="meta">"weak" | "medium" | "strong"</text>
+  <line x1="532" y1="266" x2="932" y2="266" stroke="#eef1fb"/>
+
+  <text x="532" y="290" class="meta">Ключ удаляется сразу после успешного переноса</text>
+
+  <!-- Миграция -->
+  <line x1="468" y1="200" x2="512" y2="200" stroke="#7c5cff" stroke-width="2"/>
+  <polygon points="512,200 500,194 500,206" fill="#7c5cff"/>
+  <rect x="430" y="152" width="120" height="26" rx="13" fill="#7c5cff"/>
+  <text x="490" y="170" class="lbl" text-anchor="middle" font-size="11">миграция</text>
+
+  <!-- Правила нормализации -->
+  <text x="28" y="384" class="cap">Правила нормализации (PasswordStorage.normalizeRecord)</text>
+  <line x1="28" y1="392" x2="952" y2="392" stroke="#d9def0"/>
+
+  <rect x="28" y="408" width="440" height="116" rx="10" fill="#ffffff" stroke="#c9d0e8"/>
+  <text x="48" y="434" class="note">strength: "weak"   → strengthScore: 1</text>
+  <text x="48" y="458" class="note">strength: "medium" → strengthScore: 2</text>
+  <text x="48" y="482" class="note">strength: "strong" → strengthScore: 3</text>
+  <text x="48" y="506" class="note">иное значение      → strengthScore: 1</text>
+
+  <rect x="512" y="408" width="440" height="116" rx="10" fill="#ffffff" stroke="#c9d0e8"/>
+  <text x="532" y="434" class="note">name → sanitizeInput() + обрезка до 100</text>
+  <text x="532" y="458" class="note">createdAt → ISO 8601, иначе оставить как есть</text>
+  <text x="532" y="482" class="note">id → Number(raw.id)</text>
+  <text x="532" y="506" class="note">невалидная запись → пропуск (null)</text>
+
+  <text x="490" y="548" class="note" text-anchor="middle">Отдельных таблиц «категории» или «пользователи» в v1 нет — продукт полностью локальный и одно-пользовательский.</text>
+</svg>

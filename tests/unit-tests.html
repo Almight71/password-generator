@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit-тесты — Password Generator</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AA%3C/text%3E%3C/svg%3E">
+  <!--
+    PASSWORD GENERATOR — UNIT TESTS (браузерный раннер)
+    ===================================================
+    Загружает чистую логику приложения (без ui.js и app.js) и прогоняет
+    17 unit-тестов из tests/test-suite.js.
+
+    Интеграционные (TC18–TC22) и UI-кейсы (TC23–TC25) требуют jsdom
+    и файловой системы — они выполняются только в Node:
+
+        npm install && npm test
+
+    Хранилище: тесты пишут в localStorage под ключами unit_test_*,
+    поэтому перед прогоном снимается снимок этих ключей,
+    а после — восстанавливается прежнее содержимое.
+  -->
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f1222;
+      --card: #1a1f36;
+      --line: #2b3358;
+      --text: #e8eaf6;
+      --muted: #9aa3c7;
+      --pass: #3ecf8e;
+      --fail: #ff5c7a;
+      --accent: #7c5cff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f2f4fb;
+        --card: #ffffff;
+        --line: #d9def0;
+        --text: #1b2138;
+        --muted: #5c6690;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 40px 20px 80px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+    h1 { margin: 0 0 4px; font-size: 1.6rem; }
+    .sub { color: var(--muted); margin: 0 0 24px; }
+    .bar {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      padding: 16px; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--card); margin-bottom: 20px;
+    }
+    button {
+      font: inherit; font-weight: 600; color: #fff; cursor: pointer;
+      background: var(--accent); border: 0; border-radius: 8px; padding: 10px 22px;
+    }
+    button:hover { filter: brightness(1.1); }
+    button:disabled { opacity: .5; cursor: default; }
+    #summary { font-weight: 700; }
+    #summary.pass { color: var(--pass); }
+    #summary.fail { color: var(--fail); }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+    caption { text-align: left; padding: 0 0 8px; color: var(--muted); }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); font-size: .95rem; }
+    th { background: rgba(124, 92, 255, .12); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
+    tr:last-child td { border-bottom: 0; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; }
+    .badge.pass { background: rgba(62, 207, 142, .16); color: var(--pass); }
+    .badge.fail { background: rgba(255, 92, 122, .16); color: var(--fail); }
+    .badge.idle { background: rgba(154, 163, 199, .16); color: var(--muted); }
+    .msg { display: block; color: var(--fail); font-size: .85rem; margin-top: 4px; }
+    .ms { color: var(--muted); font-variant-numeric: tabular-nums; }
+    footer { margin-top: 28px; color: var(--muted); font-size: .9rem; }
+    footer a { color: var(--accent); }
+    .note { border-left: 4px solid var(--accent); padding: 8px 14px; background: var(--card); border-radius: 0 8px 8px 0; margin: 20px 0; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🧪 Unit-тесты генератора паролей</h1>
+    <p class="sub">
+      17 логических кейсов (TC1–TC17) из общего сьюта
+      <code>tests/test-suite.js</code> · версия 1.0.0
+    </p>
+
+    <div class="bar">
+      <button id="runBtn" type="button">Запустить все</button>
+      <span id="summary" aria-live="polite">не запускалось</span>
+      <span class="ms" id="elapsed"></span>
+    </div>
+
+    <div class="note">
+      Интеграционные (TC18–TC22) и визуальные (TC23–TC25) кейсы выполняются в
+      Node.js: <code>npm install &amp;&amp; npm test</code> — полный отчёт в
+      <a href="test-report.md">tests/test-report.md</a>.
+    </div>
+
+    <table>
+      <caption>Результаты прогона</caption>
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Кейс</th>
+          <th scope="col">Статус</th>
+          <th scope="col">Время</th>
+        </tr>
+      </thead>
+      <tbody id="results">
+        <tr><td colspan="4" style="color:var(--muted)">Нажмите «Запустить все».</td></tr>
+      </tbody>
+    </table>
+
+    <footer>
+      <a href="../README.md">README</a> ·
+      <a href="../docs/API.md">Справочник API</a> ·
+      <a href="test-cases.md">Все тест-кейсы</a> ·
+      <a href="https://github.com/Almight71/password-generator">Исходный код</a>
+    </footer>
+  </div>
+
+  <!-- 1. Логика приложения (utils → generator → storage) -->
+  <script src="../src/js/utils.js"></script>
+  <script src="../src/js/generator.js"></script>
+  <script src="../src/js/storage.js"></script>
+  <!-- 2. Общий набор тест-кейсов -->
+  <script src="test-suite.js"></script>
+
+  <script>
+    /**
+     * Браузерный раннер unit-тестов.
+     * Повторяет поведение tests/run-tests.js для контекста «logic».
+     */
+    (function runUnitTests() {
+      'use strict';
+
+      var button = document.getElementById('runBtn');
+      var summary = document.getElementById('summary');
+      var elapsed = document.getElementById('elapsed');
+      var tbody = document.getElementById('results');
+
+      /** Ключи localStorage, которые используют TC16 и TC17. */
+      var TEST_KEYS = ['unit_test_v1', 'unit_test_broken_v1'];
+
+      /**
+       * Снимает снимок хранилища, чтобы прогон не трогал данные пользователя.
+       * @returns {Object} Снимок ключей
+       */
+      function snapshotStorage() {
+        var snapshot = {};
+        TEST_KEYS.forEach(function (key) {
+          snapshot[key] = localStorage.getItem(key);
+        });
+        return snapshot;
+      }
+
+      /**
+       * Восстанавливает хранилище после прогона.
+       * @param {Object} snapshot - Снимок, сделанный snapshotStorage()
+       */
+      function restoreStorage(snapshot) {
+        TEST_KEYS.forEach(function (key) {
+          if (snapshot[key] === null) localStorage.removeItem(key);
+          else localStorage.setItem(key, snapshot[key]);
+        });
+      }
+
+      /** Очищает тестовые ключи до старта — каждому кейсу нужно чистое состояние. */
+      function clearTestKeys() {
+        TEST_KEYS.forEach(function (key) {
+          localStorage.removeItem(key);
+        });
+      }
+
+      /**
+       * Запускает один кейс и возвращает результат прогонов.
+       * @param {Object} testCase - Кейс из getTestCases()
+       * @returns {{id:string, name:string, status:string, message:string, ms:number}}
+       */
+      function runOne(testCase) {
+        var started = performance.now();
+
+        var originalError = console.error;
+        var originalWarn = console.warn;
+        console.error = function () {};
+        console.warn = function () {};
+
+        try {
+          testCase.run();
+          console.error = originalError;
+          console.warn = originalWarn;
+          return {
+            id: testCase.id,
+            name: testCase.name,
+            status: 'PASS',
+            message: '',
+            ms: Math.round(performance.now() - started)
+          };
+        } catch (error) {
+          console.error = originalError;
+          console.warn = originalWarn;
+          return {
+            id: testCase.id,
+            name: testCase.name,
+            status: 'FAIL',
+            message: error.message,
+            ms: Math.round(performance.now() - started)
+          };
+        }
+      }
+
+      /** Прогоняет все unit-кейсы и отрисовывает таблицу. */
+      function runAll() {
+        button.disabled = true;
+        summary.textContent = 'выполняется…';
+        summary.className = '';
+        elapsed.textContent = '';
+
+        clearTestKeys();
+
+        var snapshot = snapshotStorage();
+        var started = performance.now();
+        var cases = getTestCases().filter(function (item) {
+          return item.requires === 'logic';
+        });
+
+        var results = cases.map(runOne);
+
+        clearTestKeys();
+        restoreStorage(snapshot);
+
+        tbody.innerHTML = results.map(function (result) {
+          var badgeClass = result.status === 'PASS' ? 'pass' : 'fail';
+          var badgeText = result.status === 'PASS' ? 'PASS' : 'FAIL';
+          var message = result.message
+            ? '<span class="msg">' + escapeHtml(result.message) + '</span>'
+            : '';
+
+          return '<tr>' +
+            '<td><strong>' + escapeHtml(result.id) + '</strong></td>' +
+            '<td>' + escapeHtml(result.name) + message + '</td>' +
+            '<td><span class="badge ' + badgeClass + '">' + badgeText + '</span></td>' +
+            '<td class="ms">' + result.ms + ' мс</td>' +
+            '</tr>';
+        }).join('');
+
+        var passed = results.filter(function (r) { return r.status === 'PASS'; }).length;
+        var failed = results.length - passed;
+
+        summary.textContent = 'Пройдено ' + passed + ' из ' + results.length +
+          (failed ? ' · провалено ' + failed : ' · все зелёные');
+        summary.className = failed ? 'fail' : 'pass';
+        elapsed.textContent = Math.round(performance.now() - started) + ' мс';
+
+        button.disabled = false;
+
+        // Дублируем результат в консоль — удобно копировать в отчёт.
+        console.table(results);
+        console.log('[Unit] ' + passed + '/' + results.length + ' пройдено');
+      }
+
+      button.addEventListener('click', runAll);
+
+      // Автозапуск при открытии — чтобы страница сразу показывала состояние.
+      if (!window.location.hash.includes('no-auto')) runAll();
+    })();
+  </script>
+</body>
+</html>

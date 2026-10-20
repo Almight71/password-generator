@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- ===================== МЕТА-ДАННЫЕ ===================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Генератор паролей с сохранением в localStorage: настройка длины, наборов символов, индикатор силы и поиск по названиям.">
+  <meta name="theme-color" content="#667eea">
+  <meta name="color-scheme" content="light">
+  <title>Генератор паролей — Password Generator</title>
+
+  <!-- ===================== СТИЛИ ===================== -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Векторный значок (без внешних запросов) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%90%3C/text%3E%3C/svg%3E">
+
+  <!--
+    Режим снимка: при открытии URL с #snapshot отключаются переходы
+    и анимации ДО первого кадра, чтобы headless-скриншот
+    (tests/take-screenshots.sh) фиксировал финальное состояние,
+    а не начальный кадр анимации.
+  -->
+  <script>
+    if (location.hash === '#snapshot') {
+      document.documentElement.classList.add('snapshot');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- ===================== ШАПКА ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🔐</span>
+        <div>
+          <h1 class="brand-title">Генератор паролей</h1>
+          <p class="brand-subtitle">Password Generator with Storage · v1.0.0</p>
+        </div>
+      </div>
+
+      <nav class="site-nav" aria-label="Разделы проекта">
+        <a class="nav-link" href="sdlc_cycle.html">Цикл SDLC</a>
+        <a class="nav-link" href="https://github.com/Almight71/password-generator#readme">Документация</a>
+        <a class="nav-link" href="https://github.com/Almight71/password-generator" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===================== ОСНОВНОЕ СОДЕРЖИМОЕ ===================== -->
+  <main class="container" id="main">
+
+    <noscript>
+      <div class="card notice notice-error">
+        Для работы генератора требуется включённый JavaScript.
+      </div>
+    </noscript>
+
+    <!-- ---------- 1. ГЕНЕРАТОР ---------- -->
+    <section class="card" aria-labelledby="generatorTitle">
+      <h2 class="section-title" id="generatorTitle">Создать новый пароль</h2>
+
+      <!-- Длина пароля -->
+      <div class="length-control">
+        <label class="field-label" for="length">Длина пароля</label>
+        <input
+          type="range"
+          id="length"
+          name="length"
+          min="4"
+          max="32"
+          step="1"
+          value="16"
+          aria-describedby="lengthHint"
+        >
+        <output class="length-value" id="lengthValue" for="length">16</output>
+      </div>
+      <p class="field-hint" id="lengthHint">
+        От 4 до 32 символов. Рекомендуется не меньше 12.
+      </p>
+
+      <!-- Наборы символов -->
+      <fieldset class="options">
+        <legend class="visually-hidden">Наборы символов</legend>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="uppercase" checked>
+          <label for="uppercase">Прописные <span class="set-sample">A-Z</span></label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="lowercase" checked>
+          <label for="lowercase">Строчные <span class="set-sample">a-z</span></label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="numbers" checked>
+          <label for="numbers">Цифры <span class="set-sample">0-9</span></label>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="symbols" checked>
+          <label for="symbols">Спецсимволы <span class="set-sample">!@#$</span></label>
+        </div>
+      </fieldset>
+
+      <!-- Действия -->
+      <div class="button-group">
+        <button type="button" class="btn btn-generate" id="generateBtn">
+          ⚡ Сгенерировать
+        </button>
+        <button type="button" class="btn btn-copy" id="copyBtn">
+          📋 Копировать
+        </button>
+      </div>
+
+      <!-- Результат -->
+      <div class="password-display">
+        <code class="password-text" id="password" aria-live="polite">—</code>
+      </div>
+
+      <!-- Индикатор силы -->
+      <div class="strength-block">
+        <div
+          class="strength-indicator"
+          role="progressbar"
+          aria-label="Сила пароля"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <div class="strength-bar" id="strengthBar"></div>
+        </div>
+        <div class="strength-meta">
+          <span>Сила: <strong id="strengthText">—</strong></span>
+          <span>Энтропия: <strong id="entropyText">—</strong></span>
+        </div>
+      </div>
+
+      <!-- Сохранение -->
+      <h3 class="subsection-title">Сохранить пароль</h3>
+      <div class="save-form">
+        <label class="visually-hidden" for="passwordName">Название для пароля</label>
+        <input
+          type="text"
+          id="passwordName"
+          name="passwordName"
+          maxlength="100"
+          autocomplete="off"
+          placeholder="Для чего? (Gmail, банк, Wi-Fi…)"
+          aria-describedby="saveHint"
+        >
+        <button type="button" class="btn btn-save" id="saveBtn">💾 Сохранить</button>
+      </div>
+      <p class="field-hint" id="saveHint">Нажмите Enter, чтобы сохранить быстрее.</p>
+    </section>
+
+    <!-- ---------- 2. ХРАНИЛИЩЕ ---------- -->
+    <section class="card" aria-labelledby="storageTitle">
+      <div class="section-head">
+        <h2 class="section-title" id="storageTitle">Мои пароли</h2>
+        <span class="count-badge" id="passwordsCount" aria-live="polite"></span>
+      </div>
+
+      <div class="storage-controls">
+        <label class="visually-hidden" for="searchBox">Поиск по названию</label>
+        <input
+          type="search"
+          id="searchBox"
+          class="search-box"
+          placeholder="🔍 Поиск по названию…"
+          autocomplete="off"
+        >
+        <button type="button" class="btn btn-clear" id="clearBtn">🧹 Очистить всё</button>
+      </div>
+
+      <!-- Таблица рендерится из src/js/ui.js -->
+      <div id="passwordsList" aria-live="polite"></div>
+
+      <p class="field-hint storage-note">
+        Данные хранятся только в вашем браузере (localStorage) и не отправляются на сервер.
+      </p>
+    </section>
+  </main>
+
+  <!-- ===================== ПОДВАЛ ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>v1.0.0 · MIT License</span>
+      <a href="sdlc_cycle.html">Этапы SDLC этого проекта →</a>
+    </div>
+  </footer>
+
+  <!-- ===================== УВЕДОМЛЕНИЯ И ДИАЛОГ ===================== -->
+  <!-- Неблокирующее уведомление (замена alert) -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Модальное подтверждение (замена confirm) -->
+  <div id="confirmOverlay" class="confirm-overlay" hidden aria-hidden="true">
+    <div
+      class="confirm-dialog"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="confirmMessage"
+    >
+      <p id="confirmMessage" data-confirm-message>Вы уверены?</p>
+      <div class="confirm-actions">
+        <button type="button" class="btn btn-ghost" data-confirm-reject>Отмена</button>
+        <button type="button" class="btn btn-danger" data-confirm-accept>Подтвердить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== СКРИПТЫ =====================
+       Порядок важен: константы → генератор → хранилище → UI → приложение.
+       Классические <script> (без type="module") используются намеренно,
+       чтобы страница открывалась двойным кликом по файлу (file://),
+       где ES-модули блокируются политикой CORS.
+  ==================================================== -->
+  <script src="js/utils.js"></script>
+  <script src="js/generator.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

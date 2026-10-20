@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!--
+    ТОЧКА ВХОДА САЙТА (GitHub Pages)
+    ================================
+    GitHub Pages раздаёт файлы из корня репозитория, а само приложение
+    лежит в src/. Эта страница-заглушка выполняет три задачи:
+
+      1. немедленно переводит посетителя на src/index.html;
+      2. оставляет рабочую ссылку, если мета-редирект не сработал;
+      3. даёт ссылку на интерактивную диаграмму SDLC и на README.
+
+    Причина редиректа вместо копирования index.html в корень:
+    исходный код должен существовать в одном экземпляре в src/,
+    иначе стили и скрипты придётся дублировать и поддерживать два раза.
+
+    Локальный запуск: открывайте src/index.html напрямую,
+    либо `npm start` → http://localhost:8080
+  -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="0; url=src/index.html">
+  <meta name="robots" content="noindex">
+  <title>Генератор паролей — переход…</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%90%3C/text%3E%3C/svg%3E">
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      text-align: center;
+      padding: 24px;
+    }
+    main { max-width: 560px; }
+    h1 { margin: 0 0 12px; font-size: 1.8rem; }
+    p { line-height: 1.6; opacity: .92; }
+    .btn {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 12px 26px;
+      border-radius: 8px;
+      background: #fff;
+      color: #5a6fd6;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn:hover { box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+    nav a { color: #fff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>🔐 Password Generator</h1>
+    <p>Переходим к приложению…</p>
+    <a class="btn" href="src/index.html">Открыть генератор паролей</a>
+    <p>
+      <nav>
+        <a href="src/sdlc_cycle.html">Цикл SDLC</a> ·
+        <a href="README.md">Документация</a> ·
+        <a href="https://github.com/Almight71/password-generator">Исходный код</a>
+      </nav>
+    </p>
+  </main>
+</body>
+</html>

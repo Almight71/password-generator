@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- ===================== МЕТА-ДАННЫЕ ===================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Интерактивная диаграмма жизненного цикла разработки ПО (SDLC) проекта «Генератор паролей»: 7 этапов, чек-листы и ссылки на документацию.">
+  <meta name="theme-color" content="#667eea">
+  <title>Цикл SDLC — Генератор паролей</title>
+
+  <!-- Общие стили проекта + стили диаграммы -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%84%3C/text%3E%3C/svg%3E">
+
+  <!-- Отключаем анимации до первого кадра в режиме скриншота -->
+  <script>
+    if (location.hash === '#snapshot') {
+      document.documentElement.classList.add('snapshot');
+    }
+  </script>
+
+  <style>
+    /* ============================================================
+     * СТИЛИ СТРАНИЦЫ «ЦИКЛ SDLC»
+     * (общие токены и компоненты наследуются из css/styles.css)
+     * ============================================================ */
+    .page-lead {
+      color: rgba(255, 255, 255, 0.92);
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto var(--space-3);
+    }
+
+    /* --- Диаграмма --- */
+    .diagram-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-2);
+      box-shadow: var(--shadow-md);
+    }
+
+    .diagram-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      aspect-ratio: 1;
+    }
+
+    .diagram-wrapper svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .cycle-arc {
+      fill: none;
+      stroke: url(#arcGradient);
+      stroke-width: 3;
+      stroke-dasharray: 10 6;
+      stroke-linecap: round;
+      opacity: 0.85;
+    }
+
+    .phase-node {
+      cursor: pointer;
+      outline: none;
+    }
+
+    .phase-node .node-ring {
+      fill: rgba(102, 126, 234, 0.14);
+      stroke: transparent;
+      stroke-width: 3;
+      transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+
+    .phase-node .node-core {
+      fill: var(--color-surface);
+      filter: drop-shadow(0 4px 10px rgba(38, 50, 75, 0.25));
+    }
+
+    .phase-node .node-icon {
+      font-size: 26px;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+
+    .phase-node .node-label {
+      font-size: 12px;
+      font-weight: 700;
+      fill: var(--color-primary);
+      text-anchor: middle;
+      pointer-events: none;
+    }
+
+    .phase-node:hover .node-ring,
+    .phase-node:focus-visible .node-ring {
+      fill: rgba(102, 126, 234, 0.28);
+      stroke: var(--color-primary);
+    }
+
+    .phase-node:focus-visible .node-ring {
+      stroke-dasharray: 6 4;
+    }
+
+    .phase-node.is-active .node-ring {
+      fill: rgba(118, 75, 162, 0.22);
+      stroke: var(--color-secondary);
+      stroke-width: 4;
+    }
+
+    .phase-node.is-active .node-label {
+      fill: var(--color-secondary);
+    }
+
+    .diagram-center-title {
+      font-size: 30px;
+      font-weight: 800;
+      fill: var(--color-text);
+      text-anchor: middle;
+    }
+
+    .diagram-center-subtitle {
+      font-size: 13px;
+      fill: var(--color-text-muted);
+      text-anchor: middle;
+    }
+
+    /* --- Панель этапа --- */
+    .phase-panel {
+      margin-top: var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      box-shadow: var(--shadow-md);
+      border-left: 5px solid var(--color-primary);
+      animation: panelIn 0.25s ease;
+    }
+
+    .phase-panel[hidden] {
+      display: none;
+    }
+
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .phase-heading {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 1.4rem;
+      color: var(--color-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .phase-heading .phase-icon {
+      font-size: 1.9rem;
+    }
+
+    .phase-description {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-2);
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 0 0 var(--space-2);
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .checklist li {
+      position: relative;
+      padding-left: 28px;
+      color: var(--color-text);
+    }
+
+    .checklist li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--color-success);
+      font-weight: 800;
+    }
+
+    .phase-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      background: var(--color-surface-alt);
+      border-left: 4px solid var(--color-primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .meta-item {
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .meta-label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .meta-value {
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .doc-link {
+      display: inline-block;
+      margin-top: var(--space-2);
+      font-weight: 600;
+    }
+
+    /* --- Управление --- */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-1);
+      margin-top: var(--space-3);
+    }
+
+    .phase-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: var(--space-2);
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      padding: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+      background: transparent;
+      cursor: pointer;
+      transition: transform var(--transition), background var(--transition);
+    }
+
+    .dot:hover {
+      transform: scale(1.25);
+    }
+
+    .dot.is-active {
+      background: #fff;
+      transform: scale(1.35);
+    }
+
+    .legend {
+      margin-top: var(--space-3);
+      padding: var(--space-2);
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-md);
+      color: #fff;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .legend p + p {
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .phase-heading { font-size: 1.15rem; }
+      .meta-item { min-width: 45%; }
+      .nav-buttons { flex-direction: column; }
+      .nav-buttons .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== ШАПКА ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🔄</span>
+        <div>
+          <h1 class="brand-title">Цикл SDLC</h1>
+          <p class="brand-subtitle">Генератор паролей · 7 этапов разработки</p>
+        </div>
+      </div>
+
+      <nav class="site-nav" aria-label="Разделы проекта">
+        <a class="nav-link" href="index.html">← Генератор</a>
+        <a class="nav-link" href="https://github.com/Almight71/password-generator#readme">Документация</a>
+        <a class="nav-link" href="https://github.com/Almight71/password-generator" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="main">
+    <p class="page-lead">
+      Кликните на этап в диаграмме, используйте кнопки навигации
+      или стрелки <kbd>←</kbd> / <kbd>→</kbd> на клавиатуре.
+      Каждый этап связан с разделом документации в
+      <code>docs/SDLC/</code>.
+    </p>
+
+    <!-- ===================== ДИАГРАММА ===================== -->
+    <section class="diagram-card" aria-label="Схема жизненного цикла разработки">
+      <div class="diagram-wrapper">
+        <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="group"
+             aria-label="Круговая диаграмма SDLC: шесть этапов">
+
+          <defs>
+            <marker id="arrowhead" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+              <polygon points="0 0, 9 3.5, 0 7" fill="#667eea"/>
+            </marker>
+            <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#667eea"/>
+              <stop offset="100%" stop-color="#764ba2"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Направляющие дуги между этапами (по часовой стрелке) -->
+          <g marker-end="url(#arrowhead)">
+            <path class="cycle-arc" d="M 371.8 102.7 A 210 210 0 0 1 435.0 139.1"/>
+            <path class="cycle-arc" d="M 506.8 263.5 A 210 210 0 0 1 506.8 336.5"/>
+            <path class="cycle-arc" d="M 435.0 460.9 A 210 210 0 0 1 371.8 497.3"/>
+            <path class="cycle-arc" d="M 228.2 497.3 A 210 210 0 0 1 165.0 460.9"/>
+            <path class="cycle-arc" d="M 93.2 336.5 A 210 210 0 0 1 93.2 263.5"/>
+            <path class="cycle-arc" d="M 165.0 139.1 A 210 210 0 0 1 228.2 102.7"/>
+          </g>
+
+          <!-- Центр диаграммы -->
+          <text class="diagram-center-title" x="300" y="292">SDLC</text>
+          <text class="diagram-center-subtitle" x="300" y="316">Software Development</text>
+          <text class="diagram-center-subtitle" x="300" y="336">Life Cycle</text>
+
+          <!-- 1. Requirements -->
+          <g class="phase-node is-active" data-phase="0" role="button" tabindex="0"
+             aria-label="Этап 1: Требования" aria-pressed="true">
+            <circle class="node-ring" cx="300" cy="90" r="58"/>
+            <circle class="node-core" cx="300" cy="90" r="44"/>
+            <text class="node-icon" x="300" y="72">📋</text>
+            <text class="node-label" x="300" y="116">Requirements</text>
+          </g>
+
+          <!-- 2. Analysis -->
+          <g class="phase-node" data-phase="1" role="button" tabindex="0"
+             aria-label="Этап 2: Анализ" aria-pressed="false">
+            <circle class="node-ring" cx="481.9" cy="195" r="58"/>
+            <circle class="node-core" cx="481.9" cy="195" r="44"/>
+            <text class="node-icon" x="481.9" y="177">🔍</text>
+            <text class="node-label" x="481.9" y="221">Analysis</text>
+          </g>
+
+          <!-- 3. Design -->
+          <g class="phase-node" data-phase="2" role="button" tabindex="0"
+             aria-label="Этап 3: Проектирование" aria-pressed="false">
+            <circle class="node-ring" cx="481.9" cy="405" r="58"/>
+            <circle class="node-core" cx="481.9" cy="405" r="44"/>
+            <text class="node-icon" x="481.9" y="387">🎨</text>
+            <text class="node-label" x="481.9" y="431">Design</text>
+          </g>
+
+          <!-- 4. Development -->
+          <g class="phase-node" data-phase="3" role="button" tabindex="0"
+             aria-label="Этап 4: Разработка" aria-pressed="false">
+            <circle class="node-ring" cx="300" cy="510" r="58"/>
+            <circle class="node-core" cx="300" cy="510" r="44"/>
+            <text class="node-icon" x="300" y="492">💻</text>
+            <text class="node-label" x="300" y="536">Development</text>
+          </g>
+
+          <!-- 5. Testing -->
+          <g class="phase-node" data-phase="4" role="button" tabindex="0"
+             aria-label="Этап 5: Тестирование" aria-pressed="false">
+            <circle class="node-ring" cx="118.1" cy="405" r="58"/>
+            <circle class="node-core" cx="118.1" cy="405" r="44"/>
+            <text class="node-icon" x="118.1" y="387">🧪</text>
+            <text class="node-label" x="118.1" y="431">Testing</text>
+          </g>
+
+          <!-- 6. Deployment -->
+          <g class="phase-node" data-phase="5" role="button" tabindex="0"
+             aria-label="Этап 6: Развертывание" aria-pressed="false">
+            <circle class="node-ring" cx="118.1" cy="195" r="58"/>
+            <circle class="node-core" cx="118.1" cy="195" r="44"/>
+            <text class="node-icon" x="118.1" y="177">🚀</text>
+            <text class="node-label" x="118.1" y="221">Deployment</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===================== ПАНЕЛИ ЭТАПОВ ===================== -->
+
+    <!-- 1. Requirements -->
+    <section class="phase-panel" id="phase-0" data-panel="0" aria-labelledby="phaseTitle0">
+      <h2 class="phase-heading" id="phaseTitle0">
+        <span class="phase-icon" aria-hidden="true">📋</span> 1. Требования (Requirements)
+      </h2>
+      <p class="phase-description">
+        Фиксация функциональных и нефункциональных требований, границ продукта,
+        целевой аудитории и критериев приёмки. Результат этапа — таблицы FR/NFR,
+        которые затем проверяются тестами.
+      </p>
+      <ul class="checklist">
+        <li>Описаны функциональные требования FR1–FR9</li>
+        <li>Описаны нефункциональные требования NFR1–NFR7</li>
+        <li>Определены use cases и критерии приёмки</li>
+        <li>Зафиксированы ограничения (без сервера, только localStorage)</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">01_REQUIREMENTS.md</span></div>
+        <div class="meta-item"><span class="meta-label">Статус</span><span class="meta-value">✅ Завершено</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/01_REQUIREMENTS.md">Открыть документ требований →</a>
+    </section>
+
+    <!-- 2. Analysis -->
+    <section class="phase-panel" id="phase-1" data-panel="1" hidden aria-labelledby="phaseTitle1">
+      <h2 class="phase-heading" id="phaseTitle1">
+        <span class="phase-icon" aria-hidden="true">🔍</span> 2. Анализ (Analysis)
+      </h2>
+      <p class="phase-description">
+        Разбор предметной области: модель данных, потоки информации,
+        схема взаимодействия слоёв приложения, диаграммы (ERD, flow,
+        диаграмма классов) и оценка рисков.
+      </p>
+      <ul class="checklist">
+        <li>Определены три слоя: UI → бизнес-логика → хранилище</li>
+        <li>Описана схема данных v1 и миграция из v0</li>
+        <li>Построены диаграммы архитектуры, потоков и ERD</li>
+        <li>Оценены риски: XSS, переполнение localStorage, криптостойкость</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">02_ANALYSIS.md</span></div>
+        <div class="meta-item"><span class="meta-label">Статус</span><span class="meta-value">✅ Завершено</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/02_ANALYSIS.md">Открыть документ анализа →</a>
+    </section>
+
+    <!-- 3. Design -->
+    <section class="phase-panel" id="phase-2" data-panel="2" hidden aria-labelledby="phaseTitle2">
+      <h2 class="phase-heading" id="phaseTitle2">
+        <span class="phase-icon" aria-hidden="true">🎨</span> 3. Проектирование (Design)
+      </h2>
+      <p class="phase-description">
+        Дизайн-система и UI/UX: токены цвета и типографики, компоненты,
+        состояния элементов, адаптивные сетки, макеты десктоп/мобильный,
+        правила доступности WCAG 2.1 AA.
+      </p>
+      <ul class="checklist">
+        <li>Созданы CSS-переменные (токены) и библиотека компонентов</li>
+        <li>Нарисованы wireframes для десктопа и мобильного</li>
+        <li>Определены цвета индикатора силы (5 уровней)</li>
+        <li>Прописаны фокус-состояния, aria-атрибуты, reduced-motion</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">03_DESIGN.md</span></div>
+        <div class="meta-item"><span class="meta-label">Статус</span><span class="meta-value">✅ Завершено</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/03_DESIGN.md">Открыть документ дизайна →</a>
+    </section>
+
+    <!-- 4. Development -->
+    <section class="phase-panel" id="phase-3" data-panel="3" hidden aria-labelledby="phaseTitle3">
+      <h2 class="phase-heading" id="phaseTitle3">
+        <span class="phase-icon" aria-hidden="true">💻</span> 4. Разработка (Development)
+      </h2>
+      <p class="phase-description">
+        Реализация кода: разбиение на модули, JSDoc, обработка ошибок,
+        валидация ввода, защита от XSS, генерация через CSPRNG
+        и подготовка репозитория к публикации.
+      </p>
+      <ul class="checklist">
+        <li>Код разделён на 5 модулей (utils, generator, storage, ui, app)</li>
+        <li>JSDoc-комментарии на всех публичных методах</li>
+        <li>Try/catch на всех операциях ввода-вывода</li>
+        <li>crypto.getRandomValues вместо Math.random</li>
+        <li>Настроены .gitignore, CONTRIBUTING, семантика коммитов</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">04_DEVELOPMENT.md</span></div>
+        <div class="meta-item"><span class="meta-label">Статус</span><span class="meta-value">✅ Завершено</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/04_DEVELOPMENT.md">Открыть документ разработки →</a>
+    </section>
+
+    <!-- 5. Testing -->
+    <section class="phase-panel" id="phase-4" data-panel="4" hidden aria-labelledby="phaseTitle4">
+      <h2 class="phase-heading" id="phaseTitle4">
+        <span class="phase-icon" aria-hidden="true">🧪</span> 5. Тестирование (Testing)
+      </h2>
+      <p class="phase-description">
+        Проверка качества: юнит-тесты логики, интеграционные сценарии,
+        UI-тесты на разных разрешениях, проверка безопасности и
+        автоматический прогон в браузере.
+      </p>
+      <ul class="checklist">
+        <li>Составлено 25 тест-кейсов (unit / integration / UI / security)</li>
+        <li>Интерактивный прогон: tests/unit-tests.html</li>
+        <li>Проверены XSS-инъекции и пограничные длины 4 и 32</li>
+        <li>Прогнано на ширинах 320, 768, 1920 px</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">05_TESTING.md</span></div>
+        <div class="meta-item"><span class="meta-label">Результат</span><span class="meta-value">✅ 25/25 пройдено</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/05_TESTING.md">Открыть план тестирования →</a>
+    </section>
+
+    <!-- 6. Deployment -->
+    <section class="phase-panel" id="phase-5" data-panel="5" hidden aria-labelledby="phaseTitle5">
+      <h2 class="phase-heading" id="phaseTitle5">
+        <span class="phase-icon" aria-hidden="true">🚀</span> 6. Развертывание (Deployment)
+      </h2>
+      <p class="phase-description">
+        Публикация статического приложения: репозиторий GitHub,
+        GitHub Pages, базовая проверка после деплоя и документирование
+        процесса воспроизведения.
+      </p>
+      <ul class="checklist">
+        <li>Репозиторий Almight71/password-generator</li>
+        <li>Включён GitHub Pages из ветки main</li>
+        <li>Проверена работа по HTTPS-адресу после публикации</li>
+        <li>Описан локальный запуск и публикация в 06_DEPLOYMENT.md</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">06_DEPLOYMENT.md</span></div>
+        <div class="meta-item"><span class="meta-label">Статус</span><span class="meta-value">✅ Опубликовано</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/06_DEPLOYMENT.md">Открыть инструкцию деплоя →</a>
+    </section>
+
+    <!-- 7. Maintenance -->
+    <section class="phase-panel" id="phase-6" data-panel="6" hidden aria-labelledby="phaseTitle6">
+      <h2 class="phase-heading" id="phaseTitle6">
+        <span class="phase-icon" aria-hidden="true">🔧</span> 7. Поддержка (Maintenance)
+      </h2>
+      <p class="phase-description">
+        Сопровождение продукта после релиза: мониторинг, исправление
+        инцидентов, роадмап функций, работа с обратной связью и
+        поддержание актуальности документации.
+      </p>
+      <ul class="checklist">
+        <li>Активен роадмап v1.1 → v1.3 (шифрование, экспорт, категории)</li>
+        <li>Правила выпуска версий и ведения CHANGELOG.md</li>
+        <li>Канал обратной связи через GitHub Issues</li>
+        <li>Политика поддержки браузеров и безопасности</li>
+      </ul>
+      <div class="phase-meta">
+        <div class="meta-item"><span class="meta-label">Документ</span><span class="meta-value">07_MAINTENANCE.md</span></div>
+        <div class="meta-item"><span class="meta-label">Версия</span><span class="meta-value">v1.0.0</span></div>
+      </div>
+      <a class="doc-link" href="https://github.com/Almight71/password-generator/blob/main/docs/SDLC/07_MAINTENANCE.md">Открыть план поддержки →</a>
+    </section>
+
+    <!-- ===================== НАВИГАЦИЯ ===================== -->
+    <div class="nav-buttons">
+      <button type="button" class="btn btn-generate" id="prevPhase">← Предыдущий</button>
+      <button type="button" class="btn btn-generate" id="nextPhase">Следующий →</button>
+    </div>
+
+    <div class="phase-dots" id="phaseDots" role="tablist" aria-label="Быстрый переход к этапу">
+      <button type="button" class="dot is-active" data-phase="0" aria-label="Этап 1: Требования" aria-selected="true"></button>
+      <button type="button" class="dot" data-phase="1" aria-label="Этап 2: Анализ" aria-selected="false"></button>
+      <button type="button" class="dot" data-phase="2" aria-label="Этап 3: Проектирование" aria-selected="false"></button>
+      <button type="button" class="dot" data-phase="3" aria-label="Этап 4: Разработка" aria-selected="false"></button>
+      <button type="button" class="dot" data-phase="4" aria-label="Этап 5: Тестирование" aria-selected="false"></button>
+      <button type="button" class="dot" data-phase="5" aria-label="Этап 6: Развертывание" aria-selected="false"></button>
+      <button type="button" class="dot" data-phase="6" aria-label="Этап 7: Поддержка" aria-selected="false"></button>
+    </div>
+
+    <div class="legend">
+      <p>💡 Этапы идут по часовой стрелке; Maintenance возвращает к Requirements — цикл замыкается.</p>
+      <p>⌨️ Клавиши ← → переключают этапы · 📄 Каждый этап ведёт к своему файлу в docs/SDLC/</p>
+    </div>
+  </main>
+
+  <!-- ===================== ПОДВАЛ ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>v1.0.0 · MIT License</span>
+      <a href="index.html">← Вернуться к генератору паролей</a>
+    </div>
+  </footer>
+
+  <!-- ===================== СКРИПТ ===================== -->
+  <script>
+    /**
+     * SDLC CYCLE — INTERACTIVE DIAGRAM
+     * ================================
+     * Управление семью этапами жизненного цикла: диаграмма,
+     * точки-индикаторы, кнопки и клавиатура приведены к
+     * единому состоянию через функцию showPhase().
+     *
+     * @version 1.0.0
+     * @license MIT
+     */
+
+    /** Количество этапов цикла. @type {number} */
+    const PHASE_COUNT = 7;
+
+    /** Текущий активный этап. @type {number} */
+    let currentPhase = 0;
+
+    /**
+     * Показывает выбранный этап и синхронизирует все элементы управления.
+     *
+     * @param {number} index - Индекс этапа (0-6)
+     * @param {{focus?:boolean}} [options] - Дополнительные опции
+     * @returns {void}
+     */
+    function showPhase(index, options = {}) {
+      const target = ((Number(index) % PHASE_COUNT) + PHASE_COUNT) % PHASE_COUNT;
+
+      // Панели
+      document.querySelectorAll('[data-panel]').forEach((panel) => {
+        const active = Number(panel.dataset.panel) === target;
+        panel.hidden = !active;
+        if (active) {
+          panel.style.animation = 'none';
+          // Перезапуск анимации сбросом reflow
+          void panel.offsetWidth;
+          panel.style.animation = '';
+        }
+      });
+
+      // Узлы диаграммы
+      document.querySelectorAll('.phase-node').forEach((node) => {
+        const active = Number(node.dataset.phase) === target;
+        node.classList.toggle('is-active', active);
+        node.setAttribute('aria-pressed', String(active));
+      });
+
+      // Точки-индикаторы
+      document.querySelectorAll('.dot').forEach((dot) => {
+        const active = Number(dot.dataset.phase) === target;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', String(active));
+      });
+
+      currentPhase = target;
+
+      const activePanel = document.querySelector(`[data-panel="${target}"]`);
+      if (activePanel && options.scroll !== false) {
+        activePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      if (options.focus && activePanel) {
+        const heading = activePanel.querySelector('.phase-heading');
+        if (heading) {
+          heading.setAttribute('tabindex', '-1');
+          heading.focus({ preventScroll: false });
+        }
+      }
+
+      console.debug('[DEBUG] Открыт этап:', target + 1, 'из', PHASE_COUNT);
+    }
+
+    /**
+     * Переход к следующему этапу (с циклическим возвратом к первому).
+     * @returns {void}
+     */
+    function nextPhase() {
+      showPhase(currentPhase + 1, { focus: true });
+    }
+
+    /**
+     * Переход к предыдущему этапу.
+     * @returns {void}
+     */
+    function previousPhase() {
+      showPhase(currentPhase - 1, { focus: true });
+    }
+
+    /* --- Обработчики --- */
+
+    // Клик по узлам диаграммы
+    document.querySelectorAll('.phase-node').forEach((node) => {
+      node.addEventListener('click', () => showPhase(node.dataset.phase, { focus: true }));
+      node.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          showPhase(node.dataset.phase, { focus: true });
+        }
+      });
+    });
+
+    // Клик по точкам-индикаторам
+    document.querySelectorAll('.dot').forEach((dot) => {
+      dot.addEventListener('click', () => showPhase(dot.dataset.phase, { focus: true }));
+    });
+
+    // Кнопки навигации
+    document.getElementById('prevPhase').addEventListener('click', previousPhase);
+    document.getElementById('nextPhase').addEventListener('click', nextPhase);
+
+    // Клавиатура: стрелки переключают этап, Home/End — к краям списка
+    document.addEventListener('keydown', (event) => {
+      const tag = (event.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+
+      if (event.key === 'ArrowRight') { event.preventDefault(); nextPhase(); }
+      if (event.key === 'ArrowLeft')  { event.preventDefault(); previousPhase(); }
+      if (event.key === 'Home')       { event.preventDefault(); showPhase(0, { focus: true }); }
+      if (event.key === 'End')        { event.preventDefault(); showPhase(PHASE_COUNT - 1, { focus: true }); }
+    });
+
+    console.info('[INFO] Диаграмма SDLC инициализирована, этапов:', PHASE_COUNT);
+  </script>
+</body>
+</html>

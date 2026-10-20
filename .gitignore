@@ -1,0 +1,22 @@
+# Зависимости Node.js
+node_modules/
+
+# Служебные файлы редакторов и ОС
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+*.log
+
+# Временные и локальные артефакты
+tmp/
+.cache/
+coverage/
+.firefox-screenshots/
+
+# Секреты (никогда не коммитить)
+.env
+.env.*
+*.pem
+*.key

@@ -1,0 +1,25 @@
+{
+  "name": "password-generator",
+  "version": "1.0.0",
+  "description": "Генератор паролей с сохранением в localStorage и полной документацией SDLC",
+  "private": true,
+  "license": "MIT",
+  "author": "Almight71",
+  "homepage": "https://github.com/Almight71/password-generator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Almight71/password-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Almight71/password-generator/issues"
+  },
+  "scripts": {
+    "start": "python3 -m http.server 8080 --directory src",
+    "test": "node tests/run-tests.js",
+    "test:unit": "node tests/run-tests.js --unit",
+    "screenshots": "bash tests/take-screenshots.sh"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

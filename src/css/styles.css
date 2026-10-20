@@ -1,0 +1,889 @@
+/**
+ * PASSWORD GENERATOR — STYLES.CSS
+ * ===============================
+ * Единая таблица стилей приложения.
+ *
+ * Структура файла:
+ *   1. Токены дизайн-системы (CSS Custom Properties)
+ *   2. Базовые сбросы и типографика
+ *   3. Каркас страницы (header / main / footer)
+ *   4. Компоненты: карточки, поля, кнопки
+ *   5. Генератор: слайдер, чекбоксы, индикатор силы
+ *   6. Хранилище: поиск, таблица, бейджи
+ *   7. Уведомления и модальный диалог
+ *   8. Утилиты (visually-hidden и т.п.)
+ *   9. Адаптивность и доступность
+ *
+ * @version 1.0.0
+ * @author Almight71
+ * @license MIT
+ */
+
+/* ============================================================
+ * 1. ТОКЕНЫ ДИЗАЙН-СИСТЕМЫ
+ * ============================================================ */
+:root {
+  /* Основная палитра */
+  --color-primary: #667eea;
+  --color-primary-dark: #5a6fd6;
+  --color-secondary: #764ba2;
+  --color-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* Функциональные цвета */
+  --color-success: #2e7d32;
+  --color-success-bg: #e8f5e9;
+  --color-danger: #c62828;
+  --color-danger-bg: #ffebee;
+  --color-warning: #e65100;
+  --color-warning-bg: #fff3e0;
+  --color-info: #1565c0;
+
+  /* Нейтрали */
+  --color-text: #26324b;
+  --color-text-muted: #6b7280;
+  --color-border: #dfe3ea;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f6f7fb;
+
+  /* Тени и радиусы */
+  --shadow-sm: 0 2px 8px rgba(38, 50, 75, 0.08);
+  --shadow-md: 0 10px 30px rgba(38, 50, 75, 0.14);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Типографика */
+  --font-family: 'Segoe UI', system-ui, -apple-system, Tahoma, Geneva, Verdana, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  /* Размеры */
+  --container-width: 1000px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+
+  /* Переходы */
+  --transition: 0.2s ease;
+}
+
+/* ============================================================
+ * 2. БАЗОВЫЕ СБРОСЫ И ТИПОГРАФИКА
+ * ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-text);
+  background: var(--color-gradient);
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--color-primary);
+  transition: color var(--transition);
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-secondary);
+}
+
+/* Единый вид фокуса для клавиатурной навигации (WCAG 2.4.7) */
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+ * 3. КАРКАС СТРАНИЦЫ
+ * ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 var(--space-2);
+}
+
+/* --- Шапка --- */
+.site-header {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding: var(--space-2) 0;
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.brand-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.brand-subtitle {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* --- Основная область --- */
+main {
+  flex: 1;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* --- Подвал --- */
+.site-footer {
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+  padding: var(--space-2) 0;
+  font-size: 0.9rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.site-footer a {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ============================================================
+ * 4. КОМПОНЕНТЫ: КАРТОЧКИ, ПОЛЯ, КНОПКИ
+ * ============================================================ */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-md);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  padding-bottom: var(--space-1);
+  border-bottom: 2px solid var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.subsection-title {
+  font-size: 1.05rem;
+  color: var(--color-text);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.section-head .section-title {
+  margin-bottom: var(--space-2);
+}
+
+.count-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.field-label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.field-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+/* --- Текстовые поля --- */
+input[type='text'],
+input[type='search'] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+input[type='text']:focus,
+input[type='search']:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+input::placeholder {
+  color: #9aa3b2;
+}
+
+/* --- Кнопки --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-generate {
+  background: var(--color-gradient);
+}
+
+.btn-generate:hover {
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+}
+
+.btn-copy {
+  background: var(--color-success);
+}
+
+.btn-copy:hover {
+  background: #256428;
+}
+
+.btn-save {
+  background: var(--color-info);
+  padding: 12px 26px;
+  white-space: nowrap;
+}
+
+.btn-save:hover {
+  background: #0d4ea3;
+}
+
+.btn-clear {
+  background: #ef6c00;
+  padding: 12px 18px;
+  white-space: nowrap;
+}
+
+.btn-clear:hover {
+  background: #c85c00;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+}
+
+.btn-danger:hover {
+  background: #9c1b1b;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+}
+
+.btn-ghost:hover {
+  background: var(--color-surface-alt);
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+}
+
+.button-group .btn {
+  flex: 1 1 200px;
+}
+
+/* ============================================================
+ * 5. ГЕНЕРАТОР
+ * ============================================================ */
+
+/* --- Слайдер длины --- */
+.length-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.length-control .field-label {
+  flex: 0 0 auto;
+}
+
+input[type='range'] {
+  flex: 1;
+  height: 6px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.length-value {
+  min-width: 52px;
+  padding: 8px 0;
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: var(--radius-sm);
+}
+
+/* --- Чекбоксы --- */
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.checkbox-group input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.checkbox-group label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.set-sample {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+}
+
+/* --- Вывод пароля --- */
+.password-display {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: var(--color-surface-alt);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.password-text {
+  flex: 1;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  word-break: break-all;
+  user-select: all;
+}
+
+/* --- Индикатор силы --- */
+.strength-block {
+  margin-top: var(--space-2);
+}
+
+.strength-indicator {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.strength-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-very-weak { background: #b71c1c; }
+.strength-weak      { background: #e53935; }
+.strength-medium    { background: #fb8c00; }
+.strength-strong    { background: #43a047; }
+.strength-very-strong { background: #1b5e20; }
+
+.strength-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.strength-meta strong {
+  color: var(--color-text);
+}
+
+/* --- Форма сохранения --- */
+.save-form {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.save-form input {
+  flex: 1;
+}
+
+/* ============================================================
+ * 6. ХРАНИЛИЩЕ
+ * ============================================================ */
+.storage-controls {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.search-box {
+  flex: 1;
+}
+
+.storage-note {
+  margin-top: var(--space-2);
+}
+
+.passwords-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.passwords-table thead {
+  background: var(--color-surface-alt);
+}
+
+.passwords-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  white-space: nowrap;
+}
+
+.passwords-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.passwords-table tbody tr:hover {
+  background: #fafbff;
+}
+
+.name-cell {
+  font-weight: 600;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.password-cell .password-content {
+  display: inline-block;
+  font-size: 0.95rem;
+  word-break: break-all;
+}
+
+.password-cell .masked {
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+}
+
+.date-cell {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-small {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-small:hover {
+  background: #eceffd;
+  border-color: var(--color-primary);
+}
+
+.btn-delete.btn-small:hover {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+/* --- Бейджи силы --- */
+.strength-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.strength-badge-weak {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.strength-badge-medium {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.strength-badge-strong {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.empty-message {
+  padding: var(--space-4) var(--space-2);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+ * 7. УВЕДОМЛЕНИЯ И МОДАЛЬНЫЙ ДИАЛОГ
+ * ============================================================ */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1000;
+  max-width: min(92vw, 520px);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  font-weight: 600;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.toast-error {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.toast-info {
+  background: #e3f2fd;
+  color: var(--color-info);
+}
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  background: rgba(20, 26, 46, 0.55);
+}
+
+.confirm-overlay[hidden] {
+  display: none;
+}
+
+.confirm-dialog {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.confirm-dialog p {
+  margin-bottom: var(--space-2);
+  font-size: 1.05rem;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+/* ============================================================
+ * 8. УТИЛИТЫ
+ * ============================================================ */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.notice {
+  border-left: 4px solid var(--color-primary);
+  padding: var(--space-2);
+  background: var(--color-surface-alt);
+}
+
+.notice-error {
+  border-left-color: var(--color-danger);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+/* ============================================================
+ * 9. АДАПТИВНОСТЬ И ДОСТУПНОСТЬ
+ * ============================================================ */
+
+/* Планшеты и меньше */
+@media (max-width: 768px) {
+  .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+
+  .length-control {
+    flex-wrap: wrap;
+  }
+
+  .length-control .field-label {
+    flex: 1 1 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group .btn {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .save-form,
+  .storage-controls {
+    flex-direction: column;
+  }
+
+  .passwords-table {
+    font-size: 0.88rem;
+  }
+
+  .passwords-table th,
+  .passwords-table td {
+    padding: 8px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .name-cell {
+    max-width: 130px;
+  }
+}
+
+/* Мобильные (320px) */
+@media (max-width: 400px) {
+  body {
+    font-size: 15px;
+  }
+
+  .card {
+    padding: var(--space-2);
+  }
+
+  .header-inner,
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-nav {
+    width: 100%;
+  }
+
+  .nav-link {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* Уменьшенная анимация для пользователей с вестибулярными нарушениями */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Высокий контраст */
+@media (forced-colors: active) {
+  .btn,
+  .strength-badge,
+  .count-badge {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* ============================================================
+ * 10. РЕЖИМ СНИМКА (tests/take-screenshots.sh)
+ * При загрузке страницы с #snapshot анимации и переходы
+ * отключаются, чтобы headless-браузер зафиксировал финальное
+ * состояние элементов (например, заполненную полосу силы),
+ * а не её начальный кадр.
+ * ============================================================ */
+html.snapshot *,
+html.snapshot *::before,
+html.snapshot *::after {
+  transition: none !important;
+  animation: none !important;
+}
